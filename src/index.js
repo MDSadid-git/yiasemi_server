@@ -13,4 +13,4 @@ connectDB()
       console.log("Yiasemi Server is Listening on Port: ", process.env.PORT);
     })
   )
-  .catch((err) => console.log(`The database connition fiald ${err}`));
+  .catch((err) => console.log(`The database connition field ${err}`));
