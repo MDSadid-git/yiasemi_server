@@ -270,10 +270,10 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 const accountDetailsUpdate = asyncHandler(async (req, res) => {
-  const { userName, email } = req.body;
+  const { userName } = req.body;
 
-  if (!userName || !email) {
-    throw new ApiError(404, "All fileds area is required");
+  if (!userName) {
+    throw new ApiError(404, "UserName area is required");
   }
 
   const user = await User.findByIdAndUpdate(
@@ -281,7 +281,6 @@ const accountDetailsUpdate = asyncHandler(async (req, res) => {
     {
       $set: {
         userName,
-        email,
       },
     },
     { new: true }
@@ -289,6 +288,31 @@ const accountDetailsUpdate = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, user, "User update successfully!!!"));
+});
+
+const userAvatarUpdate = asyncHandler(async (req, res) => {
+  const avatarLocalPath = req.file?.path;
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Avatar file not found!!!");
+  }
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
+  if (!avatar) {
+    throw new ApiError(400, "Error upload file avatar");
+  }
+  const userUpdateAvatar = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        avatar: avatar.url,
+      },
+    },
+    { new: true }
+  ).select("-password");
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, userAvatarUpdate, "Avatar update successfully!!!")
+    );
 });
 
 export {
@@ -299,4 +323,5 @@ export {
   changeCurrentPassword,
   getCurrentUser,
   accountDetailsUpdate,
+  userAvatarUpdate,
 };
