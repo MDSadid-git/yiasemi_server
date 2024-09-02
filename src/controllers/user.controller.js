@@ -266,7 +266,29 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
-    .json(200, req.user, "Current user fetched successfully");
+    .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
+});
+
+const accountDetailsUpdate = asyncHandler(async (req, res) => {
+  const { userName, email } = req.body;
+
+  if (!userName || !email) {
+    throw new ApiError(404, "All fileds area is required");
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        userName,
+        email,
+      },
+    },
+    { new: true }
+  ).select("-password");
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "User update successfully!!!"));
 });
 
 export {
@@ -276,4 +298,5 @@ export {
   refreshAccessToken,
   changeCurrentPassword,
   getCurrentUser,
+  accountDetailsUpdate,
 };
