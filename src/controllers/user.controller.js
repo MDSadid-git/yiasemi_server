@@ -187,6 +187,12 @@ const logOutUser = asyncHandler(async (req, res) => {
 });
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
+  // get user incomingRefreshToken done
+  // validation - not empty done
+  // decodedToken done
+  // CheckToken used or expired done
+  // return respons done
+
   const incomingRefreshToke = req.cookies.refreshToken || req.body.refreshToken;
   if (!incomingRefreshToke) {
     throw new ApiError(401, "unanthorized request");
@@ -230,4 +236,37 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser, logOutUser, refreshAccessToken };
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  // get data form frontend done
+  // validation - not empty done
+  // user find auth.middlewars done
+  // check if user already exists? userName, email done
+  // upload them to cloudinary, avatar done
+  // create user object - create entry in db done
+  // remove password and refresh token field from response done
+  // check for user creation done
+  // return respons done
+
+  const { oldPassword, newPassword, comfirmPassword } = req.body;
+  if (!(newPassword === comfirmPassword)) {
+    throw new ApiError(402, "new password & old password not same!!!");
+  }
+  const user = await User.findById(req.user?._id);
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+  if (!isPasswordCorrect) {
+    throw new ApiError(401, "User password incorrent give me right password");
+  }
+  user.password = newPassword;
+  await user.save({ validateBeforeSave: false });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password change successfully!!!"));
+});
+
+export {
+  registerUser,
+  loginUser,
+  logOutUser,
+  refreshAccessToken,
+  changeCurrentPassword,
+};
