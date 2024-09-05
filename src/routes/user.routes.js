@@ -13,6 +13,8 @@ import { upload } from "../middlewares/multer.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middlewars.js";
 
 const router = Router();
+
+// all user Router
 router.route("/register").post(
   upload.fields([
     {

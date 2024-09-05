@@ -2,13 +2,13 @@ import mongoose, { Schema } from "mongoose";
 
 const menuSchema = new Schema(
   {
-    menuName: {
+    name: {
       type: String,
       required: true,
       trim: true,
       index: true,
     },
-    recipeName: {
+    recipe: {
       type: String,
       required: true,
     },
@@ -17,7 +17,7 @@ const menuSchema = new Schema(
       required: true,
     },
     category: {
-      type: true,
+      type: String,
       required: true,
     },
     price: {
