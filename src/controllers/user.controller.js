@@ -39,15 +39,44 @@ const registerUser = asyncHandler(async (req, res) => {
   if (
     [userName, email, password, avatar].some((field) => field?.trim() === "")
   ) {
-    throw new ApiError(400, "All fields are requied");
+    return res
+      .status(400)
+      .json(new ApiResponse(400, `All fields are requied`, "Faild"));
   }
 
   // check if user already exists? userName, email
   const existedUser = await User.findOne({
     $or: [{ email }, { userName }],
   });
-  if (existedUser) {
-    throw new ApiError(410, "User with email or username already exists!!!");
+  if (existedUser.userName == userName && existedUser.email == email) {
+    return res
+      .status(401)
+      .json(
+        new ApiResponse(
+          401,
+          `${existedUser.userName} ${existedUser.email} alrady existed`,
+          "Faild"
+        )
+      );
+  } else {
+    if (existedUser.userName == userName) {
+      return res
+        .status(401)
+        .json(
+          new ApiResponse(
+            401,
+            `${existedUser.userName} alrady existed`,
+            "Faild"
+          )
+        );
+    }
+    if (existedUser.email == email) {
+      return res
+        .status(401)
+        .json(
+          new ApiResponse(401, `${existedUser.email} alrady existed`, "Faild")
+        );
+    }
   }
 
   // upload them to cloudinary, avatar
@@ -97,7 +126,10 @@ const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   //user email
   if (!email) {
-    throw new ApiError(400, "Email is required");
+    // throw new ApiError(400, "Email is required")
+    return res
+      .status(400)
+      .json(new ApiResponse(400, "Email is required", "Unsuccessfull"));
   }
 
   // find the user
@@ -109,7 +141,10 @@ const loginUser = asyncHandler(async (req, res) => {
   // password check
   const passwordValid = await user.isPasswordCorrect(password);
   if (!passwordValid) {
-    throw new ApiError(402, "Invalid user Password");
+    // throw new ApiError(402, "Invalid user Password");
+    return res
+      .status(402)
+      .json(new ApiResponse(402, "Invalid user Password", "Unsuccessfull"));
   }
 
   // accessToken & refreshToken
