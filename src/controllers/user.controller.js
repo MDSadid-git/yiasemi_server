@@ -48,29 +48,29 @@ const registerUser = asyncHandler(async (req, res) => {
   const existedUser = await User.findOne({
     $or: [{ email }, { userName }],
   });
-  if (existedUser.userName == userName && existedUser.email == email) {
+  if (existedUser?.userName == userName && existedUser?.email == email) {
     return res
       .status(401)
       .json(
         new ApiResponse(
           401,
-          `${existedUser.userName} ${existedUser.email} alrady existed`,
+          `${existedUser?.userName} ${existedUser?.email} alrady existed`,
           "Faild"
         )
       );
   } else {
-    if (existedUser.userName == userName) {
+    if (existedUser?.userName == userName) {
       return res
         .status(401)
         .json(
           new ApiResponse(
             401,
-            `${existedUser.userName} alrady existed`,
+            `${existedUser?.userName} alrady existed`,
             "Faild"
           )
         );
     }
-    if (existedUser.email == email) {
+    if (existedUser?.email == email) {
       return res
         .status(401)
         .json(
@@ -82,12 +82,16 @@ const registerUser = asyncHandler(async (req, res) => {
   // upload them to cloudinary, avatar
   const avatarLocalPath = req.files?.avatar[0]?.path;
   if (!avatarLocalPath) {
-    throw new ApiError(400, "Avatar file is required");
+    return res
+      .status(400)
+      .json(new ApiResponse(400, `Avatar file are requied`, "Faild"));
   }
 
   const avatarImage = await uploadOnCloudinary(avatarLocalPath);
   if (!avatarImage) {
-    throw new ApiError(400, "Avatar is requied");
+    return res
+      .status(400)
+      .json(new ApiResponse(400, `Avatar is requied`, "Faild"));
   }
 
   // create user object - create entry in db
