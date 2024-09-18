@@ -143,7 +143,15 @@ const loginUser = asyncHandler(async (req, res) => {
   // find the user
   const user = await User.findOne({ email });
   if (!user) {
-    throw new ApiError(401, "User does not exist!!!");
+    return res
+      .status(401)
+      .json(
+        new ApiResponse(
+          401,
+          `${email} This user does not exist!!!`,
+          "Unsuccessfull"
+        )
+      );
   }
 
   // password check
