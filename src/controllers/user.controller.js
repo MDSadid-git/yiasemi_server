@@ -308,12 +308,14 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 });
 
 const getCurrentUser = asyncHandler(async (req, res) => {
+  // get Current User information
   return res
     .status(200)
     .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
 });
 
 const accountDetailsUpdate = asyncHandler(async (req, res) => {
+  // Account Details Update
   const { userName } = req.body;
 
   if (!userName) {
@@ -335,6 +337,7 @@ const accountDetailsUpdate = asyncHandler(async (req, res) => {
 });
 
 const userAvatarUpdate = asyncHandler(async (req, res) => {
+  // User Avatar Update
   const avatarLocalPath = req.file?.path;
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file not found!!!");
