@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   accountDetailsUpdate,
+  allUser,
   changeCurrentPassword,
   getCurrentUser,
   loginUser,
@@ -8,6 +9,7 @@ import {
   refreshAccessToken,
   registerUser,
   userAvatarUpdate,
+  userDeleteByAddmin,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middlewars.js";
@@ -30,6 +32,8 @@ router.route("/logout").post(verifyJWT, logOutUser);
 router.route("/refresh-token").post(refreshAccessToken);
 router.route("/change-password").post(verifyJWT, changeCurrentPassword);
 router.route("/current-user").get(verifyJWT, getCurrentUser);
+router.route("/users").get(allUser);
+router.route("/users/:id").delete(userDeleteByAddmin);
 router.route("/update-account").patch(verifyJWT, accountDetailsUpdate);
 router
   .route("/avatar")

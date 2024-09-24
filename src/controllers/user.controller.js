@@ -361,6 +361,22 @@ const userAvatarUpdate = asyncHandler(async (req, res) => {
       new ApiResponse(200, userAvatarUpdate, "Avatar update successfully!!!")
     );
 });
+const allUser = asyncHandler(async (req, res) => {
+  const result = await User.find({}).select("-password -refreshToken");
+  return res
+    .status(200)
+    .json(new ApiResponse(200, result, "All Users get successfully!!!"));
+});
+const userDeleteByAddmin = asyncHandler(async (req, res) => {
+  // user delete by admin
+  const id = req.params.id;
+  const userDelete = await User.deleteOne({
+    _id: new mongoose.Types.ObjectId(id),
+  });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, userDelete, "User Delete Successfully"));
+});
 
 export {
   registerUser,
@@ -371,4 +387,6 @@ export {
   getCurrentUser,
   accountDetailsUpdate,
   userAvatarUpdate,
+  allUser,
+  userDeleteByAddmin,
 };
