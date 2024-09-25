@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   accountDetailsUpdate,
+  adminSetUserRoll,
   allUser,
   changeCurrentPassword,
   getCurrentUser,
@@ -34,6 +35,7 @@ router.route("/change-password").post(verifyJWT, changeCurrentPassword);
 router.route("/current-user").get(verifyJWT, getCurrentUser);
 router.route("/users").get(allUser);
 router.route("/users/:id").delete(userDeleteByAddmin);
+router.route("/admin/:id").patch(adminSetUserRoll);
 router.route("/update-account").patch(verifyJWT, accountDetailsUpdate);
 router
   .route("/avatar")

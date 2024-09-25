@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiRespose.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const generateAccessAndRefereshTokens = async (userId) => {
   try {
@@ -377,6 +378,21 @@ const userDeleteByAddmin = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, userDelete, "User Delete Successfully"));
 });
+const adminSetUserRoll = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const findUser = await User.findById({
+    _id: new mongoose.Types.ObjectId(id),
+  });
+  const updateDoc = {
+    $set: {
+      roll: "Admin",
+    },
+  };
+  const result = await User.updateOne(findUser, updateDoc);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, result, "User create admin successfully!!!"));
+});
 
 export {
   registerUser,
@@ -389,4 +405,5 @@ export {
   userAvatarUpdate,
   allUser,
   userDeleteByAddmin,
+  adminSetUserRoll,
 };

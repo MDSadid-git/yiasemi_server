@@ -21,6 +21,11 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
+    roll: {
+      type: String,
+      enum: ["Admin", "Owner", "Manager", "User"],
+      default: "User",
+    },
     avatar: {
       type: String,
       required: true,
