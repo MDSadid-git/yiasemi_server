@@ -238,6 +238,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   // return respons done
 
   const incomingRefreshToke = req.cookies.refreshToken || req.body.refreshToken;
+  console.log(req.cookies.refreshToken);
+
   if (!incomingRefreshToke) {
     throw new ApiError(401, "unanthorized request");
   }
@@ -363,6 +365,7 @@ const userAvatarUpdate = asyncHandler(async (req, res) => {
     );
 });
 const allUser = asyncHandler(async (req, res) => {
+  // console.log(req.headers);
   const result = await User.find({}).select("-password -refreshToken");
   return res
     .status(200)
