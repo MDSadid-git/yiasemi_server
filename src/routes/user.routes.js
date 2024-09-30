@@ -5,6 +5,7 @@ import {
   allUser,
   changeCurrentPassword,
   getCurrentUser,
+  isAdminCheck,
   loginUser,
   logOutUser,
   refreshAccessToken,
@@ -37,6 +38,7 @@ router.route("/users").get(verifyJWT, allUser);
 router.route("/users/:id").delete(userDeleteByAddmin);
 router.route("/admin/:id").patch(adminSetUserRoll);
 router.route("/update-account").patch(verifyJWT, accountDetailsUpdate);
+router.route("/admin/admin/:id").get(verifyJWT, isAdminCheck);
 router
   .route("/avatar")
   .patch(verifyJWT, upload.single("avatar"), userAvatarUpdate);

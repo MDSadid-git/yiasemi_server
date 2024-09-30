@@ -396,6 +396,15 @@ const adminSetUserRoll = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, result, "User create admin successfully!!!"));
 });
+const isAdminCheck = asyncHandler(async (req, res) => {
+  const adminEmail = req.params.id;
+  const adminUser = await User.findOne({ email: adminEmail });
+  const isAdmin = adminUser.roll === "Admin";
+  if (!isAdmin) {
+    return res.status(401).json(new ApiResponse(401, "User is Not Admin"));
+  }
+  return res.status(200).json(new ApiResponse(200, "Admin find successfully"));
+});
 
 export {
   registerUser,
@@ -409,4 +418,5 @@ export {
   allUser,
   userDeleteByAddmin,
   adminSetUserRoll,
+  isAdminCheck,
 };
