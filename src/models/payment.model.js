@@ -10,11 +10,11 @@ const paymentSchema = new Schema(
       type: Number,
       required: true,
     },
-    cartId: {
+    cartIds: {
       type: Array,
       required: true,
     },
-    menuItemId: {
+    menuItemIds: {
       type: Array,
       required: true,
     },
