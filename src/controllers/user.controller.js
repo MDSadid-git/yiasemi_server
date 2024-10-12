@@ -5,6 +5,8 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiRespose.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import { Menu } from "../models/menu.model.js";
+import { Payment } from "../models/payment.model.js";
 
 const generateAccessAndRefereshTokens = async (userId) => {
   try {
@@ -405,6 +407,31 @@ const isAdminCheck = asyncHandler(async (req, res) => {
   }
   return res.status(200).json(new ApiResponse(200, "Admin find successfully"));
 });
+const adminStats = asyncHandler(async (req, res) => {
+  const allUser = await User.estimatedDocumentCount();
+  const allMenu = await Menu.estimatedDocumentCount();
+  const allOrders = await Payment.estimatedDocumentCount();
+  const result = await Payment.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalRevenue: {
+          $sum: "$price",
+        },
+      },
+    },
+  ]);
+  const revenue = result.length > 0 ? result[0].totalRevenue : 0;
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { allUser, allMenu, allOrders, revenue },
+        "Successfully"
+      )
+    );
+});
 
 export {
   registerUser,
@@ -419,4 +446,5 @@ export {
   userDeleteByAddmin,
   adminSetUserRoll,
   isAdminCheck,
+  adminStats,
 };
