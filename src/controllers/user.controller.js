@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { Menu } from "../models/menu.model.js";
 import { Payment } from "../models/payment.model.js";
+import { Cart } from "../models/cart.model.js";
+import e from "cors";
 
 const generateAccessAndRefereshTokens = async (userId) => {
   try {
@@ -464,6 +466,16 @@ const orderStats = asyncHandler(async (req, res) => {
   ]);
   return res.status(200).json(new ApiResponse(200, result, "Successfull"));
 });
+const userProfileStats = asyncHandler(async (req, res) => {
+  const email = "slhsadid@gmail.com";
+  console.log(email);
+
+  const orderResult = await Cart.find({ email });
+  // const reviewResult = await Review.find({ email });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { orderResult }, "Successfull"));
+});
 export {
   registerUser,
   loginUser,
@@ -479,4 +491,5 @@ export {
   isAdminCheck,
   adminStats,
   orderStats,
+  userProfileStats,
 };
