@@ -9,6 +9,8 @@ import { Menu } from "../models/menu.model.js";
 import { Payment } from "../models/payment.model.js";
 import { Cart } from "../models/cart.model.js";
 import e from "cors";
+import { Review } from "../models/review.model.js";
+import { Booking } from "../models/booking.model.js";
 
 const generateAccessAndRefereshTokens = async (userId) => {
   try {
@@ -471,10 +473,18 @@ const userProfileStats = asyncHandler(async (req, res) => {
   console.log(email);
 
   const orderResult = await Cart.find({ email });
-  // const reviewResult = await Review.find({ email });
+  const reviewResult = await Review.find({ email });
+  const bookingResult = await Booking.find({ email });
+  const paymentResult = await Payment.find({ email });
   return res
     .status(200)
-    .json(new ApiResponse(200, { orderResult }, "Successfull"));
+    .json(
+      new ApiResponse(
+        200,
+        { orderResult, reviewResult, bookingResult, paymentResult },
+        "Successfull"
+      )
+    );
 });
 export {
   registerUser,
