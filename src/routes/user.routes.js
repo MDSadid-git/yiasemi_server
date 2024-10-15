@@ -9,6 +9,7 @@ import {
   isAdminCheck,
   loginUser,
   logOutUser,
+  orderStats,
   refreshAccessToken,
   registerUser,
   userAvatarUpdate,
@@ -37,6 +38,7 @@ router.route("/refresh-token").post(refreshAccessToken);
 router.route("/change-password").post(verifyJWT, changeCurrentPassword);
 router.route("/current-user").get(verifyJWT, getCurrentUser);
 router.route("/admin-stats").get(verifyJWT, verifyAdmin, adminStats);
+router.route("/order-stats").get(orderStats);
 router.route("/users").get(verifyJWT, allUser);
 router.route("/users/:id").delete(userDeleteByAddmin);
 router.route("/admin/:id").patch(adminSetUserRoll);

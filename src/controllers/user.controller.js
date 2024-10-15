@@ -432,7 +432,38 @@ const adminStats = asyncHandler(async (req, res) => {
       )
     );
 });
-
+const orderStats = asyncHandler(async (req, res) => {
+  const result = await Payment.aggregate([
+    { $unwind: "$menuItemIds" },
+    {
+      $lookup: {
+        from: "menus",
+        localField: "menuItemIds",
+        foreignField: "_id",
+        as: "muneItems",
+      },
+    },
+    {
+      $unwind: "$muneItems",
+    },
+    {
+      $group: {
+        _id: "$muneItems.category",
+        quantity: { $sum: 1 },
+        revenue: { $sum: "$muneItems.price" },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        category: "$_id",
+        quantity: 1,
+        totalRevenue: "$revenue",
+      },
+    },
+  ]);
+  return res.status(200).json(new ApiResponse(200, result, "Successfull"));
+});
 export {
   registerUser,
   loginUser,
@@ -447,4 +478,5 @@ export {
   adminSetUserRoll,
   isAdminCheck,
   adminStats,
+  orderStats,
 };
