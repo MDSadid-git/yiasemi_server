@@ -469,22 +469,58 @@ const orderStats = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, result, "Successfull"));
 });
 const userProfileStats = asyncHandler(async (req, res) => {
-  const email = "slhsadid@gmail.com";
-  console.log(email);
+  const email = req.user.email;
 
-  const orderResult = await Cart.find({ email });
-  const reviewResult = await Review.find({ email });
-  const bookingResult = await Booking.find({ email });
-  const paymentResult = await Payment.find({ email });
+  const userStatsProfile = await Cart.aggregate([
+    {
+      $match: { email },
+    },
+    {
+      $lookup: {
+        from: "reviews",
+        localField: "email",
+        foreignField: "email",
+        as: "reviewResult",
+      },
+    },
+    {
+      $lookup: {
+        from: "bookings",
+        localField: "email",
+        foreignField: "email",
+        as: "bookingResult",
+      },
+    },
+    {
+      $lookup: {
+        from: "payments",
+        localField: "email",
+        foreignField: "email",
+        as: "paymentResult",
+      },
+    },
+    {
+      $lookup: {
+        from: "carts",
+        localField: "email",
+        foreignField: "email",
+        as: "orderResult",
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        email: 1,
+        orderResult: 1,
+        reviewResult: 1,
+        bookingResult: 1,
+        paymentResult: 1,
+      },
+    },
+  ]);
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { orderResult, reviewResult, bookingResult, paymentResult },
-        "Successfull"
-      )
-    );
+    .json(new ApiResponse(200, userStatsProfile, "Successfull"));
 });
 export {
   registerUser,
