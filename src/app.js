@@ -19,11 +19,13 @@ import userRouter from "./routes/user.routes.js";
 import menuRouter from "./routes/menu.routes.js";
 import cartRouter from "./routes/cart.routes.js";
 import paymentRouter from "./routes/payment.routes.js";
+import reviewRouter from "./routes/review.routes.js";
 
 //all routes declaration
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/menus", menuRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/payment", paymentRouter);
+app.use("/api/v1/reviews", reviewRouter);
 
 export { app };

@@ -26,7 +26,7 @@ const router = Router();
 router.route("/current-user").get(verifyJWT, getCurrentUser);
 router.route("/admin-stats").get(verifyJWT, verifyAdmin, adminStats);
 router.route("/order-stats").get(verifyJWT, verifyAdmin, orderStats);
-router.route("/user-profile-stats").get(userProfileStats);
+router.route("/user-profile-stats").get(verifyJWT, userProfileStats);
 router.route("/users").get(verifyJWT, allUser);
 router.route("/register").post(
   upload.fields([
