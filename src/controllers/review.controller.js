@@ -2,6 +2,11 @@ import { Review } from "../models/review.model.js";
 import { ApiResponse } from "../utils/ApiRespose.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
+const allReviews = asyncHandler(async (req, res) => {
+  const reviews = await Review.find({});
+  return res.status(200).json(new ApiResponse(200, reviews, "Successfull"));
+});
+
 const addReviewsUser = asyncHandler(async (req, res) => {
   console.log(req.body);
   const { name, details, rating } = req.body;
@@ -23,4 +28,4 @@ const addReviewsUser = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, addReview, "Successfull"));
 });
 
-export { addReviewsUser };
+export { addReviewsUser, allReviews };
