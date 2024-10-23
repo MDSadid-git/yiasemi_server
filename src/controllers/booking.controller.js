@@ -2,6 +2,10 @@ import { Booking } from "../models/booking.model.js";
 import { ApiResponse } from "../utils/ApiRespose.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
+const adminBookingList = asyncHandler(async (req, res) => {
+  const result = await Booking.find({});
+  return res.status(200).json(new ApiResponse(200, result, "Successfulll"));
+});
 const userBookingList = asyncHandler(async (req, res) => {
   const email = req.user.email;
 
